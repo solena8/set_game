@@ -29,6 +29,9 @@ class Game:
     def init_selection(self):
         self.move_cards_from_pile_to_selection(12)
 
+    def fill_selection(self):
+        self.move_cards_from_pile_to_selection(3)
+
     def card_param_number(self, card1: Card, card2: Card, card3: Card) -> bool:
         if card1.number != card2.number and card1.number != card3.number and card1.number != card3.number:
             return True
@@ -37,7 +40,7 @@ class Game:
         else:
             return False
 
-    def card_param_color(card1: Card, card2: Card, card3: Card) -> bool:
+    def card_param_color(self, card1: Card, card2: Card, card3: Card) -> bool:
         if card1.color != card2.color and card1.color != card3.color and card2.color != card3.color:
             return True
         if card1.color == card2.color and card1.color == card3.color and card2.color == card3.color:
@@ -45,7 +48,7 @@ class Game:
         else:
             return False
 
-    def card_param_shape(card1: Card, card2: Card, card3: Card) -> bool:
+    def card_param_shape(self, card1: Card, card2: Card, card3: Card) -> bool:
         if card1.shape != card2.shape and card1.shape != card3.shape and card2.shape != card3.shape:
             return True
         if card1.shape == card2.shape and card1.shape == card3.shape and card2.shape == card3.shape:
@@ -53,7 +56,7 @@ class Game:
         else:
             return False
 
-    def card_param_filling(card1: Card, card2: Card, card3: Card) -> bool:
+    def card_param_filling(self, card1: Card, card2: Card, card3: Card) -> bool:
         if card1.filling != card2.filling and card1.filling != card3.filling and card2.filling != card3.filling:
             return True
         if card1.filling == card2.filling and card1.filling == card3.filling and card2.filling == card3.filling:
@@ -62,22 +65,32 @@ class Game:
             return False
 
 
-    def check_if_set_is_valid(card1: Card, card2: Card, card3: Card) -> bool:
-        return (card_param_number(card1, card2, card3) and
-                card_param_color(card1, card2, card3) and
-                card_param_shape(card1, card2, card3) and
-                card_param_filling(card1, card2, card3))
+    def check_if_set_is_valid(self, card1: Card, card2: Card, card3: Card) -> bool:
+        return (self.card_param_number(card1, card2, card3) and
+                self.card_param_color(card1, card2, card3) and
+                self.card_param_shape(card1, card2, card3) and
+                self.card_param_filling(card1, card2, card3))
 
 
     def find_set(self) -> (Card, Card, Card):
+        found_set_list = []
         for card_1 in self.selection:
             for card_2 in self.selection:
                 for card_3 in self.selection:
                     if card_1 != card_2 and card_2 != card_3 and card_1 != card_3:
-                        if check_if_set_is_valid(card_1, card_2, card_3) == 1:
-                            return (card1, card2, card3)
+                        if self.check_if_set_is_valid(card_1, card_2, card_3) == 1:
+                            found_set_list.append([card_1, card_2, card_3])
+                            self.set = [item for sublist in found_set_list for item in sublist]
+                            return self.set
 
-                    # print(card1, card2, card3)
+    def remove_cards_from_selection_and_set(self):
+        for card in list(self.set):
+            self.set.remove(card)
+            self.selection.remove(card)
+
+
+# A faire :
+# remove set from selection
 
 def init_game() -> Game:
     # Create all_cards
@@ -98,6 +111,7 @@ set_game_1: Game = init_game()
 ### Test move_cards_from_pile_to_selection ###
 assert len(set_game_1.pile) == 81
 assert len(set_game_1.selection) == 0
+
 set_game_1.move_cards_from_pile_to_selection(1)
 assert len(set_game_1.pile) == 80
 assert len(set_game_1.selection) == 1
@@ -109,14 +123,25 @@ set_game_2.move_cards_from_pile_to_selection(5)
 assert len(set_game_2.pile) == 76
 assert len(set_game_2.selection) == 5
 
-### Test init_selection ###
-set_game_3: Game = init_game()
+### Test ###
 
-assert len(set_game_3.selection) == 0
-assert len(set_game_3.pile) == 81
-set_game_3.init_selection()  # == Game.init_selection(set_game_3)
-assert len(set_game_3.selection) == 12
-assert len(set_game_3.pile) == 81 - 12
+set_game_4: Game = init_game()
+set_game_4.init_selection()
+set_game_4.find_set()
+assert len(set_game_4.pile) == 69
+assert len(set_game_4.set) == 3
+assert len(set_game_4.selection) == 12
+print(set_game_4.find_set())
+
+set_game_4.remove_cards_from_selection_and_set()
+assert len(set_game_4.selection) == 9
+assert len(set_game_4.set) == 0
+print("this should be empty:", set_game_4.set)
+
+set_game_4.fill_selection()
+assert len(set_game_4.pile) == 66
+assert len(set_game_4.selection) == 12
+assert len(set_game_4.set) == 0
 
 
 
@@ -125,22 +150,3 @@ assert len(set_game_3.pile) == 81 - 12
 
 
 
-
-card_1: Card = Card(number="1", shape="L", color="R", filling="H")
-card_2: Card = Card(number="3", shape="O", color="V", filling="P")
-card_3: Card = Card(number="2", shape="R", color="M", filling="V")
-card_4: Card = Card(number="2", shape="O", color="M", filling="V")
-card_5: Card = Card(number="3", shape="V", color="R", filling="P")
-card_6: Card = Card(number="1", shape="V", color="M", filling="P")
-
-# assert card_param_number(card_1, card_3, card_4) == False
-# assert card_param_number(card_1, card_4, card_5) == True
-# assert card_param_shape(card_1, card_2, card_4) == False
-# assert card_param_shape(card_1, card_4, card_5) == True
-# assert card_param_color(card_1, card_2, card_5) == False
-# assert card_param_color(card_2, card_4, card_5) == True
-# assert card_param_filling(card_1, card_2, card_6) == False
-# assert card_param_filling(card_1, card_2, card_3) == True
-
-assert check_if_set_is_valid(card_1, card_2, card_3) == True
-assert check_if_set_is_valid(card_1, card_2, card_4) == False
