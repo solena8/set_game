@@ -17,7 +17,6 @@ assert len(set_game_2.pile) == 76
 assert len(set_game_2.selection) == 5
 
 # Test
-
 set_game_4: Game = init_game()
 set_game_4.init_selection()
 set_game_4.find_set()
