@@ -14,7 +14,6 @@ class Game:
     selection: list[Card]
     set: list[Card]
 
-
     def number_of_cards(self) -> int:
         return len(self.pile)
 

@@ -1,4 +1,3 @@
-
 set_game_1: Game = init_game()
 
 # Test move_cards_from_pile_to_selection
