@@ -1,14 +1,12 @@
 from dataclasses import dataclass
 import random
 
-
 @dataclass
 class Card:
     number: str
     shape: str
     color: str
     filling: str
-
 
 @dataclass
 class Game:
