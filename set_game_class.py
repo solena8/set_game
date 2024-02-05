@@ -78,11 +78,11 @@ class Game:
                             self.set = [item for sublist in found_set_list for item in sublist]
                             return self.set
 
-    def remove_cards_from_pile(self, cards_to_remove):
+    def remove_cards_from_pile(self, cards_to_remove : list[str]):
         for card in cards_to_remove:
             self.pile.remove(card)
 
-    def print_and_remove_from_selection(self, cards_to_remove):
+    def print_and_remove_from_selection(self):
         print(self.set)
         for card in self.set:
             self.selection.remove(card)
@@ -122,7 +122,7 @@ previous_match = True
 while not set_game_4.game_over():
     set_game_4.set = set_game_4.find_set()
     if set_game_4.set:
-        set_game_4.print_and_remove_from_selection(set)
+        set_game_4.print_and_remove_from_selection()
         previous_match = True
     else:
         if previous_match == False:
