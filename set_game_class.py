@@ -30,36 +30,17 @@ class Game:
         self.move_cards_from_pile_to_selection(3)
 
     def card_param_number(self, card1: Card, card2: Card, card3: Card) -> bool:
-        if card1.number != card2.number and card1.number != card3.number and card1.number != card3.number:
-            return True
-        if card1.number == card2.number and card1.number == card3.number and card1.number == card3.number:
-            return True
-        else:
-            return False
+        return (card1.number == card2.number == card3.number) or (
+                    card1.number != card2.number != card3.number != card1.number)
 
     def card_param_color(self, card1: Card, card2: Card, card3: Card) -> bool:
-        if card1.color != card2.color and card1.color != card3.color and card2.color != card3.color:
-            return True
-        if card1.color == card2.color and card1.color == card3.color and card2.color == card3.color:
-            return True
-        else:
-            return False
+        return (card1.color == card2.color == card3.color) or (card1.color != card2.color != card3.color != card1.color)
 
     def card_param_shape(self, card1: Card, card2: Card, card3: Card) -> bool:
-        if card1.shape != card2.shape and card1.shape != card3.shape and card2.shape != card3.shape:
-            return True
-        if card1.shape == card2.shape and card1.shape == card3.shape and card2.shape == card3.shape:
-            return True
-        else:
-            return False
+        return (card1.shape == card2.shape == card3.shape) or (card1.shape != card2.shape != card3.shape != card1.shape)
 
     def card_param_filling(self, card1: Card, card2: Card, card3: Card) -> bool:
-        if card1.filling != card2.filling and card1.filling != card3.filling and card2.filling != card3.filling:
-            return True
-        if card1.filling == card2.filling and card1.filling == card3.filling and card2.filling == card3.filling:
-            return True
-        else:
-            return False
+        return (card1.filling == card2.filling == card3.filling) or (card1.filling != card2.filling != card3.filling != card1.filling)
 
     def check_if_set_is_valid(self, card1: Card, card2: Card, card3: Card) -> bool:
         return (self.card_param_number(card1, card2, card3) and
@@ -84,15 +65,15 @@ class Game:
 
     def print_and_remove_from_selection(self):
         print(self.set)
-        for card in self.set:
+        for card in list(self.set):
             self.selection.remove(card)
-            self.set.remove(card)
+
 
     def add_3(self):
         if len(self.pile) >= 3:
-            if (len(self.selection) == 12 and self.set is None) or len(self.selection) == 9:
+            if (len(self.selection) == 12 and not self.set) or len(self.selection) == 9:
                 new_elements = random.sample(self.pile, 3)
-                self.pile = self.remove_cards_from_pile(new_elements)
+                self.remove_cards_from_pile(new_elements)
                 updated_list = self.selection + new_elements
                 self.selection = updated_list
 
@@ -128,6 +109,7 @@ while not set_game_4.game_over():
         if previous_match == False:
             print("No matches found.")
             print("Remaining cards are:", set_game_4.selection, set_game_4.pile)
+            print(len(set_game_4.selection), "+", len(set_game_4.pile), "cards left")
             exit()
         previous_match = False
     set_game_4.add_3()
