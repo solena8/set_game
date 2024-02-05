@@ -1,4 +1,3 @@
-# This is a comment to test commit
 from dataclasses import dataclass
 import random
 
@@ -84,46 +83,25 @@ class Game:
     def remove_cards_from_pile(self, cards_to_remove):
         for card in cards_to_remove:
             self.pile.remove(card)
-            return self.pile
 
     def print_and_remove_from_selection(self, cards_to_remove):
         print(self.set)
-        for card in cards_to_remove:
+        for card in self.set:
             self.selection.remove(card)
-            return self.selection
+            self.set.remove(card)
 
     def add_3(self):
         if len(self.pile) >= 3:
             if (len(self.selection) == 12 and self.set is None) or len(self.selection) == 9:
                 new_elements = random.sample(self.pile, 3)
-                self.pile = self.remove_cards_from_pile(self.pile, new_elements)
+                self.pile = self.remove_cards_from_pile(new_elements)
                 updated_list = self.selection + new_elements
                 self.selection = updated_list
 
     def game_over(self):
-        return self.find_set == 0 and (
+        return self.find_set is None and (
                     len(self.selection) >= 15 or len(self.pile) < 3)
 
-
-#
-#
-# list_of_cards = random.sample(complete_list_of_cards, 12)
-# complete_list_of_cards = remove_cards(complete_list_of_cards, list_of_cards)
-#
-# previous_match = True
-#
-# while not game_over(complete_list_of_cards, list_of_cards):
-#     matched_elements = find_a_set_all_by_yourself(list_of_cards)
-#     if matched_elements:
-#         print_and_remove()
-#         previous_match = True
-#     else:
-#         if previous_match == False:
-#             print("No matches found.")
-#             print("Remaining cards are:", list_of_cards, complete_list_of_cards)
-#             exit()
-#         previous_match = False
-#     add_3(matched_elements)
 
 def init_game() -> Game:
     # Create all_cards
@@ -138,40 +116,20 @@ def init_game() -> Game:
     # Return the new Game
     return game
 
-#
-# set_game_1: Game = init_game()
-#
-# # Test move_cards_from_pile_to_selection
-# assert len(set_game_1.pile) == 81
-# assert len(set_game_1.selection) == 0
-#
-# set_game_1.move_cards_from_pile_to_selection(1)
-# assert len(set_game_1.pile) == 80
-# assert len(set_game_1.selection) == 1
-#
-# set_game_2: Game = init_game()
-# assert len(set_game_2.pile) == 81
-# assert len(set_game_2.selection) == 0
-# set_game_2.move_cards_from_pile_to_selection(5)
-# assert len(set_game_2.pile) == 76
-# assert len(set_game_2.selection) == 5
-#
-# # Test
-#
-# set_game_4: Game = init_game()
-# set_game_4.init_selection()
-# set_game_4.find_set()
-# assert len(set_game_4.pile) == 69
-# assert len(set_game_4.set) == 3
-# assert len(set_game_4.selection) == 12
-# print(set_game_4.find_set())
-#
-# set_game_4.remove_cards_from_selection_and_set()
-# assert len(set_game_4.selection) == 9
-# assert len(set_game_4.set) == 0
-# print("this should be empty:", set_game_4.set)
-#
-# set_game_4.fill_selection()
-# assert len(set_game_4.pile) == 66
-# assert len(set_game_4.selection) == 12
-# assert len(set_game_4.set) == 0
+set_game_4: Game = init_game()
+set_game_4.init_selection()
+
+previous_match = True
+
+while not set_game_4.game_over():
+    set_game_4.set = set_game_4.find_set()
+    if set_game_4.set:
+        set_game_4.print_and_remove_from_selection(set)
+        previous_match = True
+    else:
+        if previous_match == False:
+            print("No matches found.")
+            print("Remaining cards are:", set_game_4.selection, set_game_4.pile)
+            exit()
+        previous_match = False
+    set_game_4.add_3()
