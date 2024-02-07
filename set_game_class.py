@@ -103,11 +103,6 @@ class Game:
                     self.len_selection() >= 15 or self.len_pile() < 3)
 
     def game_play(self):
-        # tant qu'on n'a pas de game over -> chercher un set
-        # si on en trouve un: print le set, enlever les cartes du set de la sélection.
-        # puis ajouter 3 cartes depuis la pile vers la sélection selon les règles établies
-        # game over atteint : print message de fin + les cartes restantes dans la sélection et dans la pile
-        # + nb de cartes restantes dans la sélection + la pile
         while not self.game_over():
             self.find_set()
             if self.set:
