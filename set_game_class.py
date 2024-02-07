@@ -53,7 +53,7 @@ class Game:
         if (self.len_pile() >= 3) and ((self.len_selection() == 12 and not self.set) or (self.len_selection() == 9)):
             self.move_cards_from_pile_to_selection(3)
 
-    # définition des règles de matching ci dessous :
+    # définition des règles de matching pour les 4 méthodes ci dessous :
     # chacun des 4 types de paramètre (nombre, couleur, forme et remplissage)
     # doit avoir 3 occurences complètement identiques (1, 1, 1 par ex.)
     # ou 3 occurences complètements différentes (1, 2, 3 par ex.)
