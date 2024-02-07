@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import random
 
+
 @dataclass
 class Card:
     number: str
@@ -8,27 +9,54 @@ class Card:
     color: str
     filling: str
 
+
 @dataclass
 class Game:
     pile: list[Card]
     selection: list[Card]
     set: list[Card]
 
-    def number_of_cards(self) -> int:
+    def init_game():
+        # création de la pile de 81 cartes différentes
+        all_cards = []
+        for number in ["1", "2", "3"]:
+            for shape in ["L", "O", "V"]:
+                for color in ["V", "M", "R"]:
+                    for filling in ["H", "P", "V"]:
+                        all_cards.append(Card(number=number, shape=shape, color=color, filling=filling))
+        # Init a new Game object with all cards
+        return Game(pile=all_cards, selection=[], set=[])
+        # Return the new Game
+
+    def len_pile(self):
         return len(self.pile)
 
+    def len_selection(self):
+        return len(self.selection)
+
     def move_cards_from_pile_to_selection(self, nb_cards: int):
+        # extraction d'un nb de cartes définit de la pile, de manière aléatoire
+        # et ajout à la sélection
         random_selection = random.sample(self.pile, nb_cards)
         for card in random_selection:
             self.selection.append(card)
             self.pile.remove(card)
 
     def init_selection(self):
+        # création de la sélection initiale de 12 cartes à partir de la pile
         self.move_cards_from_pile_to_selection(12)
 
-    def fill_selection(self):
-        self.move_cards_from_pile_to_selection(3)
+    def add_3_cards(self):
+        # ajout de 3 cartes de la pile vers la selection si 1)il reste des cartes dans la pile
+        # et 2) si la selection comporte 9 cartes, ou 12 mais sans avoir trouvé de match avant
+        # (comme ça lorsqu'on a atteint 15 cartes et trouvé ensuite un match, on redescend à 12 après)
+        if (self.len_pile() >= 3) and ((self.len_selection() == 12 and not self.set) or (self.len_selection() == 9)):
+            self.move_cards_from_pile_to_selection(3)
 
+    # définition des règles de matching ci dessous :
+    # chacun des 4 types de paramètre (nombre, couleur, forme et remplissage)
+    # doit avoir 3 occurences complètement identiques (1, 1, 1 par ex.)
+    # ou 3 occurences complètements différentes (1, 2, 3 par ex.)
     def card_param_number(self, card1: Card, card2: Card, card3: Card) -> bool:
         return (card1.number == card2.number == card3.number) or (
                     card1.number != card2.number != card3.number != card1.number)
@@ -40,76 +68,57 @@ class Game:
         return (card1.shape == card2.shape == card3.shape) or (card1.shape != card2.shape != card3.shape != card1.shape)
 
     def card_param_filling(self, card1: Card, card2: Card, card3: Card) -> bool:
-        return (card1.filling == card2.filling == card3.filling) or (card1.filling != card2.filling != card3.filling != card1.filling)
+        return (card1.filling == card2.filling == card3.filling) or (
+                card1.filling != card2.filling != card3.filling != card1.filling)
 
     def check_if_set_is_valid(self, card1: Card, card2: Card, card3: Card) -> bool:
+        # vérification des 4 types de paramètres pour 3 cartes
         return (self.card_param_number(card1, card2, card3) and
                 self.card_param_color(card1, card2, card3) and
                 self.card_param_shape(card1, card2, card3) and
                 self.card_param_filling(card1, card2, card3))
 
     def find_set(self) -> (Card, Card, Card):
-        found_set_list = []
+        # Trouver un set de 3 cartes dans la sélection
+        self.set = []
         for card_1 in self.selection:
             for card_2 in self.selection:
                 for card_3 in self.selection:
                     if card_1 != card_2 and card_2 != card_3 and card_1 != card_3:
-                        if self.check_if_set_is_valid(card_1, card_2, card_3) == 1:
-                            found_set_list.append([card_1, card_2, card_3])
-                            self.set = [item for sublist in found_set_list for item in sublist]
+                        if self.check_if_set_is_valid(card_1, card_2, card_3):
+                            self.set = [card_1, card_2, card_3]
                             return self.set
 
-    def remove_cards_from_pile(self, cards_to_remove : list[str]):
-        for card in cards_to_remove:
-            self.pile.remove(card)
-
     def print_and_remove_from_selection(self):
+        # enlever les cartes du set trouvé précédemment de la sélection
         print(self.set)
         for card in list(self.set):
             self.selection.remove(card)
 
-
-    def add_3(self):
-        if len(self.pile) >= 3:
-            if (len(self.selection) == 12 and not self.set) or len(self.selection) == 9:
-                new_elements = random.sample(self.pile, 3)
-                self.remove_cards_from_pile(new_elements)
-                updated_list = self.selection + new_elements
-                self.selection = updated_list
-
     def game_over(self):
-        return self.find_set is None and (
-                    len(self.selection) >= 15 or len(self.pile) < 3)
+        # définition du game over : si on a pas trouvé de set à la dernière recherche et que
+        # soit la pile est vide
+        # soit la sélection comportait déja 15 cartes (on ne veut pas avoir une sélection de 18 cartes)
+        return self.find_set() is None and (
+                    self.len_selection() >= 15 or self.len_pile() < 3)
+
+    def game_play(self):
+        # tant qu'on n'a pas de game over -> chercher un set
+        # si on en trouve un: print le set, enlever les cartes du set de la sélection.
+        # puis ajouter 3 cartes depuis la pile vers la sélection selon les règles établies
+        # game over atteint : print message de fin + les cartes restantes dans la sélection et dans la pile
+        # + nb de cartes restantes dans la sélection + la pile
+        while not self.game_over():
+            self.find_set()
+            if self.set:
+                self.print_and_remove_from_selection()
+            self.add_3_cards()
+        print("No more matches found.")
+        print("Remaining cards are:", self.selection, self.pile)
+        print(len(self.selection), "+", len(self.pile), "cards left")
+        exit()
 
 
-def init_game() -> Game:
-    # Create all_cards
-    all_cards = []
-    for number in ["1", "2", "3"]:
-        for shape in ["L", "O", "V"]:
-            for color in ["V", "M", "R"]:
-                for filling in ["H", "P", "V"]:
-                    all_cards.append(Card(number=number, shape=shape, color=color, filling=filling))
-    # Init a new Game object with all cards
-    game = Game(pile=all_cards, selection=[], set=[])
-    # Return the new Game
-    return game
-
-set_game_4: Game = init_game()
-set_game_4.init_selection()
-
-previous_match = True
-
-while not set_game_4.game_over():
-    set_game_4.set = set_game_4.find_set()
-    if set_game_4.set:
-        set_game_4.print_and_remove_from_selection()
-        previous_match = True
-    else:
-        if previous_match == False:
-            print("No matches found.")
-            print("Remaining cards are:", set_game_4.selection, set_game_4.pile)
-            print(len(set_game_4.selection), "+", len(set_game_4.pile), "cards left")
-            exit()
-        previous_match = False
-    set_game_4.add_3()
+set_game_1 = Game.init_game()
+set_game_1.init_selection()
+set_game_1.game_play()
