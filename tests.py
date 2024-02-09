@@ -23,7 +23,7 @@ assert len(set_game_1.set) == 0
 
 assert set_game_1.check_if_set_is_valid(Card(number='3', shape='L', color='M', filling='P'),
                                         Card(number='3', shape='O', color='V', filling='V'),
-                                        Card(number='3', shape='V', color='R', filling='H')) == True
+                                        Card(number='3', shape='V', color='R', filling='H')) == 1
 
 set_game_1.find_set()
 assert len(set_game_1.pile) == 66
@@ -35,11 +35,11 @@ assert len(set_game_1.pile) == 66
 assert len(set_game_1.selection) == 12
 assert len(set_game_1.set) == 3
 
-assert set_game_1.game_over() == False
+assert set_game_1.game_over() == 0
 
 set_game_1.pile = []
 set_game_1.selection = []
 
 set_game_1.find_set()
 
-assert set_game_1.game_over() == True
+assert set_game_1.game_over() == 1
