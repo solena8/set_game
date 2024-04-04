@@ -1,10 +1,16 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from typing import Optional
+
 from card import Card
+from set import Set
 
 
 @dataclass
 class Selection:
-    selection_cards: list[Card] = field(default_factory=list)
+    selection_cards: list[Card]
+
+    def __init__(self):
+        self.selection_cards = []
 
     def len_selection(self) -> int:
         return len(self.selection_cards)
@@ -14,28 +20,13 @@ class Selection:
         # doit avoir 3 occurences complètement identiques (1, 1, 1 par ex.)
         # ou 3 occurences complètements différentes (1, 2, 3 par ex.)
 
-    @staticmethod
-    def card_param_number(card1: Card, card2: Card, card3: Card) -> bool:
-        return (card1.number == card2.number == card3.number) or (
-                card1.number != card2.number != card3.number != card1.number)
-
-    @staticmethod
-    def card_param_color(card1: Card, card2: Card, card3: Card) -> bool:
-        return (card1.color == card2.color == card3.color) or (card1.color != card2.color != card3.color != card1.color)
-
-    @staticmethod
-    def card_param_shape(card1: Card, card2: Card, card3: Card) -> bool:
-        return (card1.shape == card2.shape == card3.shape) or (card1.shape != card2.shape != card3.shape != card1.shape)
-
-    @staticmethod
-    def card_param_filling(card1: Card, card2: Card, card3: Card) -> bool:
-        return (card1.filling == card2.filling == card3.filling) or (
-                card1.filling != card2.filling != card3.filling != card1.filling)
-
-    @staticmethod
-    def check_if_set_is_valid(card1: Card, card2: Card, card3: Card) -> bool:
-        # vérification des 4 types de paramètres pour 3 cartes
-        return (Selection.card_param_number(card1, card2, card3) and
-                Selection.card_param_color(card1, card2, card3) and
-                Selection.card_param_shape(card1, card2, card3) and
-                Selection.card_param_filling(card1, card2, card3))
+    def find_set(self) -> Optional[Set]:
+        # Trouver un set de 3 cartes dans la sélection
+        for card_1 in self.selection_cards:
+            for card_2 in self.selection_cards:
+                for card_3 in self.selection_cards:
+                    if card_1 != card_2 and card_2 != card_3 and card_1 != card_3:
+                        search_set = Set(card1=card_1, card2=card_2, card3=card_3)
+                        if search_set.check_if_set_is_valid():
+                            return search_set
+        return None
