@@ -77,16 +77,16 @@ HR{
 
 /* Position the delete button relative to the image */
 .delete-button {
-    position: absolute;
-    bottom: -5px;
-    left: 65%;
+    position: relative; /* Set the position to relative */
+    bottom: 2px;
+    left: -3%;
     transform: translateX(-50%);
     border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    line-height: 45px; /* Center content vertically */
+    width: 30px;
+    height: 30px;
+    line-height: 30px; /* Center content vertically */
     font-size: 15px;
     text-align: center; /* Center content horizontally */
     padding: 0; /* Remove any padding */
-    background-color: rgba(123, 104, 238, 0.7); /* Purple color with 98% opacity */
+    background-color: rgba(123, 104, 238,); /* Purple color with 98% opacity */
 }
