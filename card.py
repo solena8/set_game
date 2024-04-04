@@ -10,3 +10,4 @@ class Card:
 
     def __repr__(self) -> str:
         return f"{self.number}{self.shape}{self.color}{self.filling}"
+
