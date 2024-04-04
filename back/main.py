@@ -1,5 +1,4 @@
 from typing import List
-
 from game import Game
 from selection import Selection
 
