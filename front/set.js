@@ -100,8 +100,35 @@ function resetForm() {
 }
 
 function trouveSet() {
+    const cards = ["1ORH","2OVP","3OMV","1ORP"];
     console.log(downloadedImages);
+        
+    // Function to format cards array for API URL
+    const formatCards = cards.join(',');
+
+    
+     // Define the API URL
+     const apiUrl = `http://127.0.0.1:8000/cards/${formatCards}`;
+     console.log(apiUrl);
+
+
+    // Make a GET request
+    fetch(apiUrl)
+    .then(response => {
+        if (!response.ok) {
+        throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
+
+
 
 // Function to reset everything
 function resetEverything() {

@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "setgame"
+version = "0.1.0"
+description = ""
+authors = ["Soléna Toussaint <solena_ananda@hotmail.com>"]
+readme = "README.md"
+packages = [{include = "back"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.110.1"
+uvicorn = {extras = ["standard"], version = "^0.29.0"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

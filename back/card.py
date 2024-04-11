@@ -8,6 +8,9 @@ class Card:
     color: str
     filling: str
 
-    def __repr__(self) -> str:
+    def to_str(self) -> str:
         return f"{self.number}{self.shape}{self.color}{self.filling}"
+
+    def __repr__(self) -> str:
+        return self.to_str()
 

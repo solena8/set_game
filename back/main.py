@@ -1,4 +1,6 @@
 from typing import List
+
+from card import Card
 from game import Game
 from selection import Selection
 
@@ -8,11 +10,9 @@ from selection import Selection
 def my_api(params: List[str]) -> List[str]:
     # params: input (from front) = full selection
     # output -> Set
-    params = ["1ORH", "2VVP", "3ORV"]
 
     selection_instance = Selection()
     for param in params:
         card = Card(param)
         selection_instance.selection_cards.append(card)
     selection_instance.find_set()
-
