@@ -1,5 +1,5 @@
 // Define the base directory where your images are located
-var baseDirectory = "C:\\Users\\Home\\PycharmProjects\\pythonSetGame\\front\\Set images\\";
+var baseDirectory = "/Set images/";
 
 // Array to keep track of downloaded images
 var downloadedImages = [];
@@ -99,8 +99,42 @@ function resetForm() {
     });
 }
 
+
+function showFoundSetImages(data) {
+    // Séparer les 3 IDs de cartes récupérés puis construire le chemin de l'image
+    var imagePaths = data.map(function(cardId) {
+        // Construct the image path
+        return baseDirectory + cardId + ".PNG";
+    });
+
+    // Loop through each image path and create an image element for it
+    imagePaths.forEach(function(imagePath) {
+        // Create a new Image element
+        var img = new Image();
+        img.src = imagePath;
+        img.alt = "Set card " + imagePath; // Use imagePath here to ensure unique alt text for each image
+        img.className = "set-card-images";
+
+        // Add event listener to handle image load
+        img.onload = function() {
+            console.log("Image loaded successfully:", img.src);
+        };
+
+        // Add error handling for image loading
+        img.onerror = function() {
+            console.error("Error loading image:", imagePath);
+            alert("Error loading image: " + imagePath);
+        };
+
+        // Append the image element to the document body or another container
+        document.getElementById("resultImages").appendChild(img);
+    });
+}
+
+
 function trouveSet() {
-    const cards = ["1ORH","2OVP","3OMV","1ORP"];
+    const cards = (downloadedImages)
+    //["1ORH","2OVP","3OMV","1ORP"];//
     console.log(downloadedImages);
         
     // Function to format cards array for API URL
@@ -121,7 +155,9 @@ function trouveSet() {
         return response.json();
     })
     .then(data => {
-        console.log(data);
+        console.log(data); // Log the data received from the API
+        // Call the function to display images
+        showFoundSetImages(data);
     })
     .catch(error => {
         console.error('Error:', error);
