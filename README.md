@@ -26,16 +26,16 @@ To run the Set Game Solver locally, follow these steps:
    ```bash
    git clone https://github.com/solena8/setgame.git
    
-2. **Navigate to the Project Directory:**:
+2. **Navigate to the Project Directory**:
 
 cd setgame
 
-3. **Set Up the Backend:**:
+3. **Set Up the Backend**:
  
 Ensure you have Python installed. You can use pip to install the required packages if you have a requirements.txt file.
 Run the Python backend script to start the server.
 
-4. **Open the Frontend::**:
+4. **Open the Frontend**:
 
 Open the index.html file in your web browser to access the user interface.
 
